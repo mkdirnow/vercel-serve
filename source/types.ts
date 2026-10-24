@@ -52,6 +52,20 @@ export declare interface Header {
   }[];
 }
 
+// The sort configuration for a directory listing.
+export declare interface ListingSort {
+  by: 'name' | 'mtime' | 'size';
+  order: 'asc' | 'desc';
+  directoriesFirst: boolean;
+}
+
+// The per-path options for a directory listing.
+export declare interface ListingOptions {
+  source: Path;
+  title?: string;
+  sort?: Partial<ListingSort>;
+}
+
 // The configuration for the CLI.
 export declare interface Configuration {
   public: Path;
@@ -65,6 +79,7 @@ export declare interface Configuration {
   renderSingle: boolean;
   symlinks: boolean;
   etag: boolean;
+  listings: ListingOptions[];
 }
 
 // The options you can pass to the CLI.

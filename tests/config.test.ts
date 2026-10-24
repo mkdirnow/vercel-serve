@@ -11,7 +11,13 @@ import { Options } from '../source/types.js';
 const fixtures = 'tests/__fixtures__/config/';
 // A helper function to load the configuration for a certain fixture.
 const loadConfig = (
-  name: 'valid' | 'invalid' | 'non-existent' | 'deprecated',
+  name:
+    | 'valid'
+    | 'invalid'
+    | 'non-existent'
+    | 'deprecated'
+    | 'listings-valid'
+    | 'listings-invalid',
   args?: Partial<Options> = {},
 ) => loadConfiguration(process.cwd(), `${fixtures}/${name}`, args);
 
@@ -42,6 +48,26 @@ describe('utilities/config', () => {
     loadConfig('invalid').catch((error: Error) => {
       expect(error.message).toMatch(/invalid/);
     });
+  });
+
+  // Make sure a valid `listings` configuration is parsed and returned.
+  test('parse valid listings config', async () => {
+    const configuration = await loadConfig('listings-valid');
+    expect(configuration.listings).toEqual([
+      {
+        source: '/docs',
+        title: 'Docs',
+        sort: { by: 'mtime', order: 'desc', directoriesFirst: true },
+      },
+    ]);
+  });
+
+  // When the `listings` configuration is invalid, the function will throw an
+  // error.
+  test('throw error if listings config is invalid', async () => {
+    await expect(loadConfig('listings-invalid')).rejects.toThrow(
+      /`listings` configuration/,
+    );
   });
 
   // When no configuration file exists, the configuration should be populated

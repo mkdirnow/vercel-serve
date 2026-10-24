@@ -1,0 +1,9 @@
+{
+  "listings": [
+    {
+      "source": "/docs",
+      "title": "Docs",
+      "sort": { "by": "mtime", "order": "desc", "directoriesFirst": true }
+    }
+  ]
+}

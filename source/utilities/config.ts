@@ -119,6 +119,13 @@ export const loadConfiguration = async (
     );
   }
 
+  // The `listings` property is specific to this CLI and unknown to the
+  // external schema (which rejects additional properties), so it's set aside
+  // here and validated against its own schema below.
+  const listings = config.listings;
+  const hasListings = listings !== undefined;
+  if (hasListings) delete config.listings;
+
   // If the configuration isn't empty, validate it against the AJV schema.
   if (Object.keys(config).length !== 0) {
     const ajv = new Ajv({ allowUnionTypes: true });
@@ -134,6 +141,47 @@ export const loadConfiguration = async (
         )}`,
       );
     }
+  }
+
+  if (hasListings) {
+    const listingsSchema = {
+      type: 'array',
+      items: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['source'],
+        properties: {
+          source: { type: 'string', minLength: 1 },
+          title: { type: 'string', minLength: 1 },
+          sort: {
+            type: 'object',
+            additionalProperties: false,
+            properties: {
+              by: { enum: ['name', 'mtime', 'size'] },
+              order: { enum: ['asc', 'desc'] },
+              directoriesFirst: { type: 'boolean' },
+            },
+          },
+        },
+      },
+    };
+
+    const ajv = new Ajv({ allowUnionTypes: true });
+    const validate = ajv.compile(listingsSchema);
+
+    if (!validate(listings) && validate.errors) {
+      const defaultMessage =
+        'The `listings` configuration you provided is invalid:';
+      const error = validate.errors[0] as ErrorObject;
+
+      throw new Error(
+        `${defaultMessage}\n${error.message ?? ''}\n${JSON.stringify(
+          error.params,
+        )}`,
+      );
+    }
+
+    config.listings = listings;
   }
 
   // Configure defaults based on the options the user has passed.

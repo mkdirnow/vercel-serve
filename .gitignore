@@ -12,3 +12,6 @@ build/
 *.tgz
 *.bak
 *.tmp
+
+# ZCode session artifacts
+.zcode/

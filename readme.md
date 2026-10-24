@@ -60,6 +60,35 @@ Now you understand how the package works! :tada:
 
 To customize `serve`'s behavior, create a `serve.json` file in the public folder and insert any of [these properties](https://github.com/vercel/serve-handler#options).
 
+### Customizing Directory Listings
+
+This fork adds a `listings` property to `serve.json` for configuring the title and sort order of directory listing pages per path:
+
+```json
+{
+  "listings": [
+    {
+      "source": "/docs",
+      "title": "Documentation",
+      "sort": { "by": "name", "order": "desc" }
+    },
+    {
+      "source": "/media/**",
+      "sort": { "by": "mtime", "order": "desc", "directoriesFirst": true }
+    }
+  ]
+}
+```
+
+- `source` (required): The path to match, following the same glob semantics as the [`headers`](https://github.com/vercel/serve-handler#headers) option (`/docs` matches exactly that directory, `/media/**` matches everything below it). The first matching entry wins, and directories without a match are listed in ascending name order.
+- `title` (optional): Replaces the `Files within …` browser tab title and the `Index of` prefix of the page heading. The breadcrumb navigation is kept.
+- `sort` (optional):
+  - `by`: What to sort by — `"name"` (default), `"mtime"` (modification time) or `"size"`.
+  - `order`: `"asc"` (default) or `"desc"`.
+  - `directoriesFirst`: If `true`, folders are listed before files (default `false`).
+
+Name sorting uses natural order (`file2` comes before `file10`). The same ordering is applied when a listing is requested as JSON with an `Accept: application/json` header, whose response additionally contains the resolved `title`.
+
 ## API
 
 The core of `serve` is [`serve-handler`](https://github.com/vercel/serve-handler), which can be used as middleware in existing HTTP servers:

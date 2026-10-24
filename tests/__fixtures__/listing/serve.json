@@ -1,0 +1,17 @@
+{
+  "listings": [
+    {
+      "source": "/docs",
+      "title": "Docs Center",
+      "sort": { "by": "name", "order": "desc" }
+    },
+    {
+      "source": "/media",
+      "sort": { "by": "mtime", "order": "desc", "directoriesFirst": true }
+    },
+    {
+      "source": "/sizes",
+      "sort": { "by": "size", "order": "desc" }
+    }
+  ]
+}

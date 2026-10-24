@@ -46,6 +46,7 @@
     "chalk-template": "0.4.0",
     "compression": "1.8.1",
     "is-port-reachable": "4.0.0",
+    "minimatch": "10.2.6",
     "serve-handler": "6.1.7",
     "tinyclip": "^0.1.12",
     "update-check": "1.5.4"

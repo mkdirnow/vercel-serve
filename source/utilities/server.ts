@@ -9,6 +9,7 @@ import compression from 'compression';
 import isPortReachable from 'is-port-reachable';
 import chalk from 'chalk';
 import { getNetworkAddress, registerCloseListener } from './http.js';
+import { handleDirectoryListing } from './listing.js';
 import { promisify } from './promise.js';
 import { logger } from './logger.js';
 import type { IncomingMessage, ServerResponse } from 'node:http';
@@ -71,8 +72,10 @@ export const startServer = async (
       if (!args['--no-compression'])
         await compress(request as ExpressRequest, response as ExpressResponse);
 
-      // Let the `serve-handler` module do the rest.
-      await handler(request, response, config);
+      // Render directory listings ourselves (custom titles and sort orders),
+      // and let the `serve-handler` module do the rest.
+      const handled = await handleDirectoryListing(request, response, config);
+      if (!handled) await handler(request, response, config);
 
       // Before returning the response, log the status code and time taken.
       const responseTime = Date.now() - requestTime.getTime();
