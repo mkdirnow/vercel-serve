@@ -23,6 +23,10 @@ jobs:
         run: pnpm install
       - name: Check for errors in code/formatting
         run: pnpm lint
+      - name: Ensure the committed build output is up to date
+        run: |
+          pnpm compile
+          git diff --exit-code -- build/
   test:
     name: Test
     runs-on: ubuntu-latest
