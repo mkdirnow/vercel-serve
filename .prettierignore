@@ -5,6 +5,7 @@
 node_modules/
 coverage/
 build/
+dist/
 .cache/
 .idea/
 .vscode/

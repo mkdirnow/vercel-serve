@@ -24,6 +24,7 @@
     "develop": "tsx watch ./source/main.ts",
     "start": "node ./build/main.js",
     "compile": "tsup ./source/main.ts",
+    "compile:single": "tsup --config config/tsup-single.ts",
     "prepare": "node scripts/prepare.mjs",
     "test:tsc": "tsc --project tsconfig.json",
     "test:unit": "vitest run --config config/vitest.ts",
